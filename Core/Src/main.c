@@ -7,8 +7,8 @@ volatile uint8_t button_debounce = 0;     /* Флаг защиты от дреб
 /**
  * @brief  Задержка
  */
-void Delay(volatile uint32_t count)
-{
+void Delay(volatile uint32_t count) {
+
     while (count--) { __NOP(); }
 }
 
@@ -17,8 +17,8 @@ void Delay(volatile uint32_t count)
  * @note   Кнопка подключена к GND (PA0 → кнопка → GND)
  *         Внутренний pull-up резистор включён
  */
-void GPIO_Init(void)
-{
+void GPIO_Init(void) {
+
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
 
@@ -39,8 +39,8 @@ void GPIO_Init(void)
  * @brief  Инициализация EXTI для кнопки на PA0
  * @note   Прерывание по падающему фронту (нажатие = переход 1→0)
  */
-void EXTI_Init(void)
-{
+void EXTI_Init(void) {
+    
     RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;     /* Тактирование AFIO */
 
     AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0; /* EXTI0 = PA0 */
@@ -84,8 +84,7 @@ void LED_On(void)  { GPIOB->BSRR = GPIO_BSRR_BS2; }
 void LED_Off(void) { GPIOB->BSRR = GPIO_BSRR_BR2; }
 void LED_Toggle(void) { GPIOB->ODR ^= GPIO_ODR_ODR2; }
 
-int main(void)
-{
+int main(void) {
     volatile uint32_t delay = 300000;
     uint8_t btn;
 
