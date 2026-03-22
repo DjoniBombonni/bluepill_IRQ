@@ -1,18 +1,36 @@
 #include "../../../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
 
-#define TEST1 0
-#define TEST2 0
+#define TEST1 1
+#define TEST2 0 
 #define TEST3 0
-#define TEST4 1
+#define TEST4 0
 
-volatile uint8_t button_pressed = 0;      // флаг нажатия кнопки
+volatile uint8_t button_pressed = 0;      // флаг нажатия кнопк
 volatile uint8_t button_debounce = 0;     // флаг защиты от дребезга
+volatile uint32_t tim_cnt = 0;
+
+void my_delay(uint32_t my_tick) {
+    tim_cnt = my_tick;
+    while(tim_cnt) {
+
+    }
+}
+
+void SysTick_Handler(void) { // обработчик прирывания системного таймера
+    if(tim_cnt != 0)
+    tim_cnt--;
+}
 
 void Delay(volatile uint32_t count) {
 
     while (count--) { __NOP(); }
 }
 
+void SysTick_Init(void) {
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk; // инициалезация системного таймера
+    SysTick->LOAD = (50000 - 1);
+    SysTick->VAL = (50000 - 1);
+}
 void GPIO_Init(void) {
 
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
@@ -86,7 +104,7 @@ int main(void) {
         /*=== ТЕСТ 1: Мигание PA2 ===*/ //TODO проверка работоспособности теста 1 - ОК
         #if TEST1 
         LED_Toggle();
-        Delay(delay);
+        my_delay(delay);
         #endif
         /*=== ТЕСТ 2: LED горит при нажатой кнопке ===*/ //TODO проверка работоспособности теста 2 - ОК
         #if TEST2
