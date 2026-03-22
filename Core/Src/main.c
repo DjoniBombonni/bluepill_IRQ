@@ -59,16 +59,16 @@ void EXTI_Init(void) {
  * @retval 1 - кнопка нажата (pull-up)
  * @retval 0 - кнопка отпущена (gnd)
  */
-uint8_t Button_Read(void)
-{
+uint8_t Button_Read(void) {
+
     return (GPIOA->IDR & GPIO_IDR_IDR0) ? 1 : 0;
 }
 
 /**
  * @brief  Чтение кнопки с антидребезгом
  */
-uint8_t Button_Read_Debounced(void)
-{
+uint8_t Button_Read_Debounced(void) {
+
     static uint8_t last_state = 0;
     uint8_t current = Button_Read();
     
@@ -94,8 +94,8 @@ int main(void) {
     __enable_irq();  /* Разрешение глобальных прерываний */
     Delay(100000);
 
-    while (1)
-    {
+    while (1) {
+        
         /* ===== ТЕСТ 1: Мигание ===== */
         #if 0
         LED_On();
