@@ -1,7 +1,10 @@
 #include "../../../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
 
 #define TEST1 1
-#define TEST2 0 
+#define TEST2 0
+    #if TEST2 
+    uint8_t btn;
+    #endif 
 #define TEST3 0
 #define TEST4 0
 
@@ -11,25 +14,22 @@ volatile uint32_t tim_cnt = 0;
 
 void my_delay(uint32_t my_tick) {
     tim_cnt = my_tick;
-    while(tim_cnt) {
-
+    while(tim_cnt != 0) {
     }
 }
 
-void SysTick_Handler(void) { // обработчик прирывания системного таймера
-    if(tim_cnt != 0)
-    tim_cnt--;
-}
-
+#if 0
 void Delay(volatile uint32_t count) {
 
     while (count--) { __NOP(); }
 }
+#endif
 
+// инициалезация системного таймера
 void SysTick_Init(void) {
-    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk; // инициалезация системного таймера
-    SysTick->LOAD = (50000 - 1);
-    SysTick->VAL = (50000 - 1);
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk; 
+    SysTick->LOAD = (8000 - 1);
+    SysTick->VAL = (8000 - 1);
 }
 void GPIO_Init(void) {
 
@@ -72,7 +72,7 @@ uint8_t Button_Read_Debounced(void) {
     uint8_t current = Button_Read();
     
     if (current != last_state) {
-        Delay(20000);                       // задержка ~20 мс
+        my_delay(20000);                       // задержка ~20 мс
         current = Button_Read();
         last_state = current;
     }
@@ -85,26 +85,19 @@ void LED_Toggle(void) { GPIOB->ODR ^= GPIO_ODR_ODR2; }
 
 int main(void) {
 
-    #if TEST1 
-    volatile uint32_t delay = 300000; 
-    #endif
-
-    #if TEST2 
-    uint8_t btn;
-    #endif
-
+    SysTick_Init();
     GPIO_Init();
     EXTI_Init();
 
     __enable_irq();
-    Delay(100000);
+    my_delay(100);
 
     while (1) {
         
         /*=== ТЕСТ 1: Мигание PA2 ===*/ //TODO проверка работоспособности теста 1 - ОК
         #if TEST1 
         LED_Toggle();
-        my_delay(delay);
+        my_delay(300);
         #endif
         /*=== ТЕСТ 2: LED горит при нажатой кнопке ===*/ //TODO проверка работоспособности теста 2 - ОК
         #if TEST2
@@ -120,7 +113,7 @@ int main(void) {
         #if TEST3
         if (Button_Read_Debounced() != 0) {
             LED_Toggle();
-            Delay(200000);  // Задержка после нажатия
+            my_delay(400);  // Задержка после нажатия
         }
         #endif
 
@@ -128,7 +121,7 @@ int main(void) {
         #if TEST4
         if (button_pressed) {
             button_pressed = 0;
-            Delay(25000);  // Антидребезг (~25 мс)
+            my_delay(250);  // Антидребезг (~25 мс) //TODO расчитать точное время антидребезга
             if (Button_Read() == 0) { 
                 LED_Toggle();
             }
