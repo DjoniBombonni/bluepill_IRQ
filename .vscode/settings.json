@@ -1,4 +1,4 @@
 {
-    "cortex-debug.gdbPath": "/opt/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb",
-    "makefile.configureOnOpen": true
+  "cortex-debug.gdbPath": "/opt/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb",
+  "makefile.configureOnOpen": true
 }

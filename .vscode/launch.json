@@ -1,22 +1,41 @@
 {
-    // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
-    // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
-    // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
-    
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Cortex Debug",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceRoot}/build/${workspaceFolderBasename}.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "servertype": "stutil",
+      "preLaunchTask": "BUILD",
+      "preRestartCommands": [
+        "load",
+        "enable breakpoint",
+        "monitor reset"
+      ],
+      "showDevDebugOutput": "raw",
+      "svdFile": "${workspaceRoot}/STM32F0x1.svd"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/home/evgenii/STM32_education/bluepill_IRQ/Core/Src",
+      "program": "/home/evgenii/STM32_education/bluepill_IRQ/Core/Src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "name": "Cortex Debug",
-            "cwd": "${workspaceFolder}",
-            "executable": "${workspaceRoot}/build/${workspaceFolderBasename}.elf",
-            "request": "launch",
-            "type": "cortex-debug",
-            "runToEntryPoint": "main",
-            "servertype": "stutil",
-            "preLaunchTask" : "BUILD",
-            "preRestartCommands" : [ "load", "enable breakpoint", "monitor reset" ],
-            "showDevDebugOutput" : "raw",
-            "svdFile" : "${workspaceRoot}/STM32F0x1.svd"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }

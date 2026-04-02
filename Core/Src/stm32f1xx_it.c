@@ -20,13 +20,11 @@ void SysTick_Handler(void) {
     #endif
 }
 
-void EXTI0_IRQHandler(void)
-{
-    if (EXTI->PR & EXTI_PR_PR0)  // Проверка флага линии 0
-    {
+void EXTI0_IRQHandler(void) {
+    // Проверка флага линии 0
+    if (EXTI->PR & EXTI_PR_PR0) {   
         // Защита от дребезга - первое срабатывание
-        if (!button_debounce)
-        {
+        if (!button_debounce) {
             button_debounce = 1;
             button_pressed = 1;
         }
